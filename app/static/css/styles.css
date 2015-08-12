@@ -1,0 +1,35 @@
+.brand-logo {
+	padding-left: 20px !important;
+}
+
+h3 {
+	padding-left: 20px;
+}
+
+.btn {
+	margin-top: 25px;
+}
+
+.full {
+	height: 100%;
+}
+
+.wrap {
+	position: absolute;
+	top: 64px;
+	height: calc(100% - 64px);
+	width: 100%;
+	opacity: 0.3;
+}
+
+.top {
+	z-index: 100;
+	position: absolute;
+	color: #ee6e73;
+	padding-left: 33%;
+	padding-top: 15%;
+}
+
+.padd {
+	margin-left: 10px;
+}

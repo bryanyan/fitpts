@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang = "en">
+	<head>
+		<meta charset = "utf-8">
+		<meta http-equiv = "X-UA-Compatible" content = "IE=edge">
+		<meta name= "viewport" content = "width=device-width, initial-scale=1">
+
+		<title> Fitness Points </title>
+		<link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+
+		<link type="text/css" rel="stylesheet" href="static/css/materialize.min.css"  media="screen,projection">
+		<link type="text/css" rel="stylesheet" href="static/css/styles.css">
+		<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"> </script>
+	    <script type="text/javascript" src="static/js/materialize.js"> </script>
+	    <script type="text/javascript" src="static/js/script.js"> </script>
+	    <script>
+	    	$(document).ready(function() {
+	    		$(".button-collapse").sideNav();
+	    		$('.slider').slider({full_width: true});
+	    	})
+	    </script>
+	</head>
+
+	<body>
+        <div class="navbar-fixed">
+		    <nav>
+		    	<div class="nav-wrapper">
+		    		<a href="{{ url_for('index') }}" class="brand-logo"> Fitness Points </a>
+		        	<ul class="right hide-on-med-and-down">
+		        		{% if not g.user.is_authenticated() %}
+		          		<li><a href="{{ url_for('signup') }}"> Sign Up </a></li>
+		          		<li><a href="{{ url_for('login') }}"> Login </a></li>
+		          		{% endif %}
+		          		{% if g.user.is_authenticated() %}
+		          		<li><a href="{{ url_for('index') }}"> Home </a></li>
+		          		<li><a href="{{ url_for('create') }}"> New Group </a> </li>
+		          		<li><a href="{{ url_for('viewgroups') }}"> View Groups </a> </li>   
+		          		<li><a href="{{ url_for('leaderboard') }}"> Leaderboards </a></li>
+		          		<li><a href="{{ url_for('logout') }}"> Logout </a></li>
+		          		{% endif %}
+		        	</ul>
+		        </div>
+		    </nav>
+		</div>		
+	{% block content %} {% endblock %}
+	</body>
+</html>

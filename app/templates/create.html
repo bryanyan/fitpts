@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+	
+	<h3> Create Group </h3>
+	<div class="row">
+		<form class="col s12" method="post">
+			{{ form.hidden_tag() }}
+			<div class="row">
+				<div class="input-field col s3">
+					<label for="input_text"> Group Name </label>
+					{{ form.name(size=80) }}
+					{% for error in form.name.errors %}
+					<br> <span style="color:red;"> {{ error }}</span>
+		          	{% endfor %} <br>
+				</div>
+			</div>
+			<div class="row">
+				<div class="input-field col s3">
+					<label for="Number of People"> Number of People </label>
+					{{ form.numppl(size=80) }}
+					{% for error in form.numppl.errors %}
+					<br> <span style="color:red;"> {{ error }} </span>
+		          	{% endfor %} <br>
+				</div>
+			</div>
+			<div id="people"> </div>
+			<div class="row">
+				<div class="col s3">
+					<button class="btn red lighten-2 waves-effect disabled" type="submit" name="action" id="final" disabled> Create Group </button>
+				</div>
+			</div>
+		</form>
+
+		<div class="row">
+			<div class="col s3">
+				<button class="btn red lighten-2 waves-effect padd" onclick="addFields()"> Add People </button>
+			</div>
+		</div>
+		
+	</div>
+
+
+{% endblock %}

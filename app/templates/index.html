@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+	{% if not current_user.is_authenticated() %}
+	    <div class="full valign-wrapper">
+	    	<img src="{{ url_for('static', filename='images/yogapic.jpg') }}" class="wrap">
+	    	<h1 class="valign top"> Fitness Points </h1>
+	  	</div>
+	{% endif %}
+
+	{% if current_user.is_authenticated() %}
+		<div class="valign-wrapper">
+	  		<h3 class="valign"> Hi {{ current_user.username }}! </h3>
+	  	</div>
+	{% endif %}
+
+{% endblock %}
