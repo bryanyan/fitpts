@@ -1,6 +1,6 @@
-var number;
 function addFields() {
-	number = document.getElementById("numppl").value;
+
+	var number = document.getElementById("numppl").value;
 	var people = document.getElementById("people");
 
 	while (people.hasChildNodes()) {
@@ -19,3 +19,5 @@ function addFields() {
 	finished.prop("disabled", false);
 	finished.removeClass("disabled");
 }
+
+

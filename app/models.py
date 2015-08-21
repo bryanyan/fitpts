@@ -35,6 +35,7 @@ class Group(db.Model):
 	group_name = db.Column(db.String(140))
 	numppl = db.Column(db.Integer)
 	actives = db.relationship('Active', backref="group", lazy="dynamic")
+	time = db.Column(db.String)
 
 	def __repr__(self):
 		return '<Group %r>' %(self.group_name)
@@ -44,6 +45,7 @@ class Active(db.Model):
 	group_id = db.Column(db.Integer, db.ForeignKey('group.id'))
 	active_name = db.Column(db.String(140))
 	points = db.Column(db.Integer)
+	session_points = db.Column(db.Integer)
 
 	def __repr__(self):
 		return '<Active %r>' %(self.active_name)

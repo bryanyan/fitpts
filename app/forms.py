@@ -16,6 +16,5 @@ class GroupForm(Form):
 	name = TextField('Name of Group', validators=[DataRequired()])
 	numppl = IntegerField('Number of People', validators=[validators.NumberRange(min=1, max=50)])
 
-
 	
 

@@ -1,8 +1,10 @@
-from flask import render_template, flash, redirect, request, session, url_for, g
+from flask import render_template, flash, redirect, request, session, url_for, g, jsonify
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app, db, lm
 from .forms import RegistrationForm, LoginForm, GroupForm
 from .models import User, Group, Active
+from operator import itemgetter, attrgetter
+from datetime import datetime, timedelta, date
 import json
 
 @app.route('/')
@@ -49,20 +51,16 @@ def logout():
 	logout_user()
 	return redirect(url_for('index'))
 
-@app.route('/leaderboard')
-@login_required
-def leaderboard():
-	return render_template('leaderboard.html', title="Leaderboards")
-
 @app.route('/create', methods=['GET','POST'])
 @login_required
 def create():
 	form = GroupForm()
 	if request.method == 'POST' and form.validate():
-		group = Group(group_name=form.name.data, numppl=form.numppl.data, author=g.user)
+		day = str(date.today())
+		group = Group(group_name=form.name.data, numppl=form.numppl.data, author=g.user, time=day)
 		db.session.add(group)
 		for i in xrange(int(request.form['numppl'])):
-			active = Active(active_name=request.form['p%d' %(i)], points=0, group=group)
+			active = Active(active_name=request.form['p%d' %(i)], points=0, session_points=0, group=group)
 			db.session.add(active)
 		db.session.commit()
 		flash('Group created called "%s"' %(form.name.data))
@@ -73,14 +71,45 @@ def create():
 @login_required
 def viewgroups():
 	groups = g.user.groups.all()
-	
 	return render_template('groups.html', title="Your Groups", groups=groups)
 
+@app.route('/members/group<int:group>', methods=['GET','POST'])
+@login_required
+def members(group):
+	groups = g.user.groups.all()
+	selectedGroup = groups[group-1]
+	members = selectedGroup.actives.all()
+	if request.method == "POST":
+		members[int(request.form['activeindex'])-1].points += int(request.form['ptadd'])
+		members[int(request.form['activeindex'])-1].session_points += int(request.form['ptadd'])
+		db.session.commit()
+		return redirect('/members/group%d' %(group))
+	return render_template('members.html', title="Members", members=members)
 
 
+def check_date(group):
+	current_date = date.today()
+	mems = group.actives.all()
+	if group.time != None:
+		prev_time = datetime.strptime(group.time, "%Y-%m-%d")
+		prev_day = datetime.date(prev_time)
+		delta = current_date-prev_day
+		for actives in mems:
+			if delta.days >= 7:
+				actives.session_points = 0
+				group.time = str(current_date)
+		db.session.commit()
+	return
 
-
-
-
+@app.route('/leaderboards/group<int:group>', methods=['GET', 'POST'])
+@login_required
+def leaderboards(group):
+	groups = g.user.groups.all()
+	selectedGroup = groups[group-1]
+	members = selectedGroup.actives.all()
+	check_date(selectedGroup)
+	leaders = sorted(members, key=attrgetter('points'), reverse=True)
+	weekly = sorted(members, key=attrgetter('session_points'), reverse=True)
+	return render_template('leaderboards.html', title="Leaderboards", leaders=leaders, weekly=weekly)
 
 
